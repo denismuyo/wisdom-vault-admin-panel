@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WISDOM Vault - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 70px;
+        }
+        .sidebar.collapsed .sidebar-text {
+            display: none;
+        }
+        .content {
+            transition: margin-left 0.3s ease;
+        }
+        .content.expanded {
+            margin-left: 70px;
+        }
+        .media-preview {
+            max-height: 300px;
+        }
+        .dark-mode {
+            background-color: #1a202c;
+            color: #f7fafc;
+        }
+        .dark-mode .card {
+            background-color: #2d3748;
+            border-color: #4a5568;
+        }
+        .dark-mode .sidebar {
+            background-color: #2d3748;
+        }
+        .dark-mode .table-row {
+            border-color: #4a5568;
+        }
+        .dark-mode input, .dark-mode select, .dark-mode textarea {
+            background-color: #2d3748;
+            color: #f7fafc;
+            border-color: #4a5568;
+        }
+        .accessibility-large {
+            font-size: 1.2rem;
+        }
+        .accessibility-large .text-sm {
+            font-size: 1rem;
+        }
+        .accessibility-large .text-xs {
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                z-index: 100;
+                left: -250px;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            .content {
+                margin-left: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar bg-blue-800 text-white w-64 flex flex-col">
+            <div class="p-4 flex items-center justify-between border-b border-blue-700">
+                <div class="flex items-center">
+                    <i class="fas fa-book-open text-2xl mr-3"></i>
+                    <span class="sidebar-text text-xl font-bold">WISDOM Vault</span>
+                </div>
+                <button id="toggleSidebar" class="text-white focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="p-4 border-b border-blue-700 flex items-center">
+                <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mr-3">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="sidebar-text">
+                    <div class="font-medium">Admin User</div>
+                    <div class="text-xs text-blue-200">Super Admin</div>
+                </div>
+            </div>
+            <nav class="flex-1 overflow-y-auto">
+                <div class="p-2">
+                    <div class="sidebar-text text-xs uppercase text-blue-300 px-4 py-2">Main</div>
+                    <a href="#" class="flex items-center px-4 py-3 text-white bg-blue-700 rounded-lg mx-2 mb-1">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        <span class="sidebar-text">Dashboard</span>
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-blue-200 hover:text-white hover:bg-blue-700 rounded-lg mx-2 mb-1">
+                        <i class="fas fa-check-circle mr-3"></i>
+                        <span class="sidebar-text">Content Review</span>
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-blue-200 hover:text-white hover:bg-blue-700 rounded-lg mx-2 mb-1">
+                        <i class="fas fa-tags mr-3"></i>
+                        <span class="sidebar-text">Classification</span>
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-blue-200 hover:text-white hover:bg-blue-700 rounded-lg mx-2 mb-1">
+                        <i class="fas fa-cloud-upload-alt mr-3"></i>
+                        <span class="sidebar-text">Bulk Upload</span>
+                    </a>
+                </div>
+                <div class="p-2">
+                    <div class="sidebar-text text-xs uppercase text-blue-300 px-4 py-2">Cultural Workflow</div>
+                    <a href="#" class="flex items-center px-4 py-3 text-blue-200 hover:text-white hover:bg-blue-700 rounded-lg mx-2 mb-1">
+                        <i class="fas fa-hands-helping mr-3"></i>
+                        <span class="sidebar-text">Elder Review</span>
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-blue-200 hover:text-white hover:bg-blue-700 rounded-lg mx-2 mb-1">
+                        <i class="fas fa-exclamation-triangle mr-3"></i>
+                        <span class="sidebar-text">Sensitive Content</span>
+                    </a>
+                </div>
+                <div class="p-2">
+                    <div class="sidebar-text text-xs uppercase text-blue-300 px-4 py-2">Education</div>
+                    <a href="#" class="flex items-center px-4 py-3 text-blue-200 hover:text-white hover:bg-blue-700 rounded-lg mx-2 mb-1">
+                        <i class="fas fa-school mr-3"></i>
+                        <span class="sidebar-text">School Toolkit</span>
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-blue-200 hover:text-white hover:bg-blue-700 rounded-lg mx-2 mb-1">
+                        <i class="fas fa-bullhorn mr-3"></i>
+                        <span class="sidebar-text">Campaigns</span>
+                    </a>
+                </div>
+                <div class="p-2">
+                    <div class="sidebar-text text-xs uppercase text-blue-300 px-4 py-2">Management</div>
+                    <a href="#" class="flex items-center px-4 py-3 text-blue-200 hover:text-white hover:bg-blue-700 rounded-lg mx-2 mb-1">
+                        <i class="fas fa-users-cog mr-3"></i>
+                        <span class="sidebar-text">User Management</span>
+                    </a>
+                    <a href="#" class="flex items-center px-4 py-3 text-blue-200 hover:text-white hover:bg-blue-700 rounded-lg mx-2 mb-1">
+                        <i class="fas fa-chart-line mr-3"></i>
+                        <span class="sidebar-text">Analytics</span>
+                    </a>
+                </div>
+            </nav>
+            <div class="p-4 border-t border-blue-700">
+                <button id="toggleDarkMode" class="flex items-center text-blue-200 hover:text-white w-full">
+                    <i class="fas fa-moon mr-3"></i>
+                    <span class="sidebar-text">Dark Mode</span>
+                </button>
+                <button id="toggleAccessibility" class="flex items-center text-blue-200 hover:text-white w-full mt-2">
+                    <i class="fas fa-universal-access mr-3"></i>
+                    <span class="sidebar-text">Large Text</span>
+                </button>
+                <button class="flex items-center text-blue-200 hover:text-white w-full mt-2">
+                    <i class="fas fa-language mr-3"></i>
+                    <span class="sidebar-text">English / Kiswahili</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="content" class="content flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm z-10">
+                <div class="flex items-center justify-between px-6 py-4">
+                    <div class="flex items-center">
+                        <button id="mobileMenuButton" class="text-gray-500 focus:outline-none mr-4 md:hidden">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <h1 class="text-xl font-semibold text-gray-800">Content Review Dashboard</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <button class="text-gray-500 focus:outline-none">
+                                <i class="fas fa-bell text-xl"></i>
+                                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <button class="text-gray-500 focus:outline-none">
+                                <i class="fas fa-envelope text-xl"></i>
+                                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                            </button>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white mr-2">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span class="hidden md:inline text-gray-700">Admin User</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="card bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Total Entries</p>
+                                <h3 class="text-2xl font-bold">1,248</h3>
+                                <p class="text-sm text-green-500 flex items-center">
+                                    <i class="fas fa-arrow-up mr-1"></i> 12% from last month
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                                <i class="fas fa-file-alt text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Pending Review</p>
+                                <h3 class="text-2xl font-bold">87</h3>
+                                <p class="text-sm text-red-500 flex items-center">
+                                    <i class="fas fa-arrow-down mr-1"></i> 5 urgent
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center">
+                                <i class="fas fa-clock text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Elder Validation</p>
+                                <h3 class="text-2xl font-bold">23</h3>
+                                <p class="text-sm text-blue-500">Cultural sensitivity</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
+                                <i class="fas fa-hands-helping text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Top Community</p>
+                                <h3 class="text-2xl font-bold">Maasai</h3>
+                                <p class="text-sm text-gray-500">42 submissions</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                                <i class="fas fa-users text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Review Table -->
+                <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+                    <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between">
+                        <h2 class="text-lg font-semibold text-gray-800">Recent Submissions</h2>
+                        <div class="mt-2 md:mt-0 flex space-x-2">
+                            <select class="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>All Status</option>
+                                <option>Pending</option>
+                                <option>Verified</option>
+                                <option>Archived</option>
+                                <option>Sensitive</option>
+                                <option>Rejected</option>
+                            </select>
+                            <select class="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>All Regions</option>
+                                <option>East Africa</option>
+                                <option>West Africa</option>
+                                <option>Southern Africa</option>
+                                <option>Central Africa</option>
+                            </select>
+                            <button class="bg-blue-600 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <i class="fas fa-filter mr-1"></i> Filter
+                            </button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entry ID</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Media Type</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Region</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <!-- Row 1 -->
+                                <tr class="table-row hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">WV-2023-056</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rain Prediction Methods</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center">
+                                            <i class="fas fa-microphone-alt text-blue-500 mr-1"></i> Audio
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Tanzania</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <button class="text-green-600 hover:text-green-900 mr-3" onclick="showMediaPreview('WV-2023-056')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-purple-600 hover:text-purple-900">
+                                            <i class="fas fa-flag"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Row 2 -->
+                                <tr class="table-row hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">WV-2023-057</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Healing Herbs of the Savannah</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center">
+                                            <i class="fas fa-images text-green-500 mr-1"></i> Photo
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Kenya</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Verified</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <button class="text-green-600 hover:text-green-900 mr-3" onclick="showMediaPreview('WV-2023-057')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-purple-600 hover:text-purple-900">
+                                            <i class="fas fa-flag"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Row 3 -->
+                                <tr class="table-row hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">WV-2023-058</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Sacred Forest Rituals</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center">
+                                            <i class="fas fa-video text-red-500 mr-1"></i> Video
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Ghana</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">Elder Review</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <button class="text-green-600 hover:text-green-900 mr-3" onclick="showMediaPreview('WV-2023-058')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-purple-600 hover:text-purple-900">
+                                            <i class="fas fa-flag"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Row 4 -->
+                                <tr class="table-row hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">WV-2023-059</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Animal Migration Patterns</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center">
+                                            <i class="fas fa-file-alt text-gray-500 mr-1"></i> Text
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Botswana</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Published</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <button class="text-green-600 hover:text-green-900 mr-3" onclick="showMediaPreview('WV-2023-059')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-purple-600 hover:text-purple-900">
+                                            <i class="fas fa-flag"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Row 5 -->
+                                <tr class="table-row hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">WV-2023-060</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Traditional Fishing Techniques</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <span class="inline-flex items-center">
+                                            <i class="fas fa-video text-red-500 mr-1"></i> Video
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Senegal</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Rejected</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <button class="text-green-600 hover:text-green-900 mr-3" onclick="showMediaPreview('WV-2023-060')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-purple-600 hover:text-purple-900">
+                                            <i class="fas fa-flag"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                        <div class="text-sm text-gray-500">
+                            Showing <span class="font-medium">1</span> to <span class="font-medium">5</span> of <span class="font-medium">87</span> entries
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white text-gray-700 hover:bg-gray-50">
+                                Previous
+                            </button>
+                            <button class="px-3 py-1 border border-gray-300 rounded-md text-sm bg-white text-gray-700 hover:bg-gray-50">
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h2 class="text-lg font-semibold text-gray-800">Recent Activity</h2>
+                        </div>
+                        <div class="divide-y divide-gray-200">
+                            <!-- Activity 1 -->
+                            <div class="p-4 hover:bg-gray-50">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-900">You approved WV-2023-042</p>
+                                        <p class="text-sm text-gray-500">Healing practices from Maasai community</p>
+                                        <div class="mt-1 text-xs text-gray-500">2 hours ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Activity 2 -->
+                            <div class="p-4 hover:bg-gray-50">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                                            <i class="fas fa-upload"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-900">New submission from Knowledge Scout</p>
+                                        <p class="text-sm text-gray-500">WV-2023-061: Oral history of the Kalahari</p>
+                                        <div class="mt-1 text-xs text-gray-500">5 hours ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Activity 3 -->
+                            <div class="p-4 hover:bg-gray-50">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
+                                            <i class="fas fa-hands-helping"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-900">Elder validation completed</p>
+                                        <p class="text-sm text-gray-500">Sacred ceremony documentation approved</p>
+                                        <div class="mt-1 text-xs text-gray-500">1 day ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Activity 4 -->
+                            <div class="p-4 hover:bg-gray-50">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-10 h-10 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-900">Content flagged as sensitive</p>
+                                        <p class="text-sm text-gray-500">WV-2023-055 requires restricted access</p>
+                                        <div class="mt-1 text-xs text-gray-500">2 days ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="px-6 py-4 border-t border-gray-200">
+                            <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                View all activity
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Featured Story -->
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h2 class="text-lg font-semibold text-gray-800">Featured Story</h2>
+                        </div>
+                        <div class="p-4">
+                            <div class="aspect-w-16 aspect-h-9 mb-4">
+                                <img src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Featured story" class="w-full h-auto rounded-lg">
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">The Wisdom of Baobab Trees</h3>
+                            <p class="text-sm text-gray-600 mb-4">How communities in Zimbabwe have used baobabs as natural calendars, medicine cabinets, and community meeting points for generations.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">SDG 15</span>
+                                <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Botany</span>
+                                <span class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-800">Shona</span>
+                            </div>
+                            <button class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                View Full Story
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Media Preview Modal -->
+    <div id="mediaPreviewModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                    Media Preview: <span id="previewEntryId"></span>
+                                </h3>
+                                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="mt-4">
+                                <div id="audioPreview" class="hidden media-preview">
+                                    <audio controls class="w-full">
+                                        <source src="https://example.com/sample-audio.mp3" type="audio/mpeg">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                </div>
+                                <div id="videoPreview" class="hidden media-preview">
+                                    <video controls class="w-full">
+                                        <source src="https://example.com/sample-video.mp4" type="video/mp4">
+                                        Your browser does not support the video element.
+                                    </video>
+                                </div>
+                                <div id="imagePreview" class="hidden media-preview">
+                                    <img src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Preview" class="w-full h-auto rounded-lg">
+                                </div>
+                                <div id="textPreview" class="hidden media-preview p-4 bg-gray-50 rounded-lg">
+                                    <p class="text-gray-700">This is a sample text content preview. The actual content would be displayed here for review purposes. In a real implementation, this would show the submitted text content from the knowledge keeper.</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 border-t border-gray-200 pt-4">
+                                <h4 class="text-sm font-medium text-gray-500">Metadata</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Title</label>
+                                        <input type="text" value="Rain Prediction Methods" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Community</label>
+                                        <input type="text" value="Maasai" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Region</label>
+                                        <select class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                            <option>East Africa</option>
+                                            <option>West Africa</option>
+                                            <option>Southern Africa</option>
+                                            <option>Central Africa</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Language</label>
+                                        <input type="text" value="Maa" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <label class="block text-sm font-medium text-gray-700">Description</label>
+                                    <textarea rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">Traditional methods used by Maasai elders to predict rainfall patterns based on animal behavior, plant signals, and celestial observations.</textarea>
+                                </div>
+                                <div class="mt-4">
+                                    <label class="block text-sm font-medium text-gray-700">Tags</label>
+                                    <input type="text" value="weather, indigenous science, Maasai, ecology" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                </div>
+                                <div class="mt-4">
+                                    <label class="block text-sm font-medium text-gray-700">SDG Tags</label>
+                                    <div class="mt-2 flex flex-wrap gap-2">
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                            <span class="ml-2 text-sm text-gray-700">SDG 13 (Climate)</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" checked class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                            <span class="ml-2 text-sm text-gray-700">SDG 15 (Life on Land)</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                            <span class="ml-2 text-sm text-gray-700">SDG 11 (Cities)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Approve
+                    </button>
+                    <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Send for Elder Review
+                    </button>
+                    <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Reject
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+            document.getElementById('content').classList.toggle('expanded');
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenuButton').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+
+        // Dark mode toggle
+        document.getElementById('toggleDarkMode').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+        });
+
+        // Accessibility large text toggle
+        document.getElementById('toggleAccessibility').addEventListener('click', function() {
+            document.body.classList.toggle('accessibility-large');
+        });
+
+        // Media preview modal
+        function showMediaPreview(entryId) {
+            document.getElementById('previewEntryId').textContent = entryId;
+            
+            // Hide all preview types first
+            document.querySelectorAll('.media-preview').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Show the appropriate preview based on entry (simplified for demo)
+            if (entryId === 'WV-2023-056') {
+                document.getElementById('audioPreview').classList.remove('hidden');
+            } else if (entryId === 'WV-2023-057') {
+                document.getElementById('imagePreview').classList.remove('hidden');
+            } else if (entryId === 'WV-2023-058') {
+                document.getElementById('videoPreview').classList.remove('hidden');
+            } else {
+                document.getElementById('textPreview').classList.remove('hidden');
+            }
+            
+            document.getElementById('mediaPreviewModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('mediaPreviewModal').classList.add('hidden');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('mediaPreviewModal')) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
